@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#092b34">
+  <meta name="description" content="ToursInPakistan travel enquiry demonstration: a Google Form connected to Google Sheets, with future Make.com and AI qualification integration.">
+  <title>ToursInPakistan | Travel Lead Automation Demo</title>
+  <style>
+    :root { color-scheme:light; --navy:#092b34; --deep:#0c3940; --teal:#087f77; --mint:#d6f4e8; --cream:#f8f6ef; --ink:#14383b; --muted:#5b7074; --line:#dce8e3; --gold:#e8ac4b; --shadow:0 18px 52px rgba(12,48,48,.12); }
+    * { box-sizing:border-box }
+    html { scroll-behavior:smooth }
+    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--cream); color:var(--ink); }
+    a { color:inherit; text-decoration:none }
+    button,a { -webkit-tap-highlight-color:transparent }
+    .shell { width:min(1120px, calc(100% - 40px)); margin:auto }
+    .topbar { background:var(--navy); color:#cfe6df; font-size:12px; letter-spacing:.045em; text-align:center; padding:10px 12px }
+    header { position:sticky; top:0; z-index:20; background:rgba(248,246,239,.94); backdrop-filter:blur(16px); border-bottom:1px solid var(--line) }
+    .nav { display:flex; align-items:center; justify-content:space-between; gap:18px; min-height:78px }
+    .brand { display:flex; gap:11px; align-items:center; font-weight:850; color:var(--navy); letter-spacing:-.035em; font-size:21px }
+    .brand-symbol { width:42px;height:42px;border-radius:14px;background:var(--navy); display:grid;place-items:center; flex-shrink:0 }
+    .brand-symbol svg { width:26px; height:26px }
+    .links { display:flex;align-items:center;gap:27px;color:#496367;font-size:14px;font-weight:600 }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:9px; border:0; border-radius:12px; padding:14px 21px; font-size:14px; font-weight:750; transition:transform .15s ease,background .15s ease; cursor:pointer }
+    .btn:hover { transform:translateY(-2px) }
+    .btn-primary { color:white;background:var(--teal);box-shadow:0 9px 20px rgba(8,127,119,.19) }
+    .btn-primary:hover { background:#066b65 }
+    .btn-ghost { color:var(--navy);background:white;border:1px solid #cbded8 }
+    .desktop-cta { padding:11px 16px }
+    .hero { background:radial-gradient(ellipse at 71% 6%,rgba(81,178,151,.32),transparent 36%),linear-gradient(125deg,#0a343e 0%,#0a4447 60%,#1a7367 100%); color:white; overflow:hidden; }
+    .hero-grid { min-height:535px; display:grid; grid-template-columns:1.15fr 1fr; align-items:center; gap:34px }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; color:#b8e8da; padding:8px 13px; border:1px solid rgba(215,254,243,.26);border-radius:50px; background:rgba(255,255,255,.07);font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:800 }
+    .eyebrow i { width:7px;height:7px; border-radius:50%; background:#76e9a7;display:block;box-shadow:0 0 0 4px rgba(118,233,167,.15) }
+    h1 { letter-spacing:-.058em;line-height:1.09;font-size:clamp(42px,5vw,71px);margin:24px 0 19px;max-width:680px }
+    h1 em { font-style:normal; color:#9de6cb }
+    .hero p { color:#c3deda;line-height:1.8; max-width:540px;font-size:16px;margin:0 0 28px }
+    .hero-actions { display:flex;flex-wrap:wrap;gap:12px }
+    .hero .btn-ghost { background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.22);color:white }
+    .hero-note { font-size:12px;color:#b6d5cc;margin-top:22px;display:flex;align-items:center;gap:9px }
+    .hero-art { width:100%;max-width:560px;margin-inline:auto;filter:drop-shadow(0 25px 30px rgba(0,0,0,.1)) }
+    .hero-art svg { display:block; width:100%;height:auto }
+    section { padding:72px 0 }
+    .section-head { margin-bottom:28px }
+    .kicker { color:var(--teal);font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase }
+    h2 { font-size:clamp(30px,3.2vw,43px);margin:10px 0 10px;letter-spacing:-.048em;line-height:1.15 }
+    .sub { line-height:1.72;color:var(--muted);max-width:710px;margin:0 }
+    .grid-three { display:grid;grid-template-columns:repeat(3,1fr);gap:17px }
+    .info-card { background:white;border:1px solid var(--line);border-radius:19px;padding:25px;box-shadow:0 5px 17px rgba(0,0,0,.018) }
+    .number { width:37px;height:37px; display:grid;place-items:center;background:#e6f5ef;border-radius:12px;color:var(--teal);font-size:13px;font-weight:900;margin-bottom:20px }
+    .info-card h3 { margin:0 0 10px;letter-spacing:-.025em;font-size:19px }
+    .info-card p { margin:0;color:var(--muted);line-height:1.7;font-size:14px }
+    .status { display:inline-flex;gap:7px;align-items:center;border-radius:40px;font-size:11px;font-weight:780;margin-top:19px;padding:8px 10px;background:#e6f5ed;color:#137253 }
+    .status.pending { background:#fff3df;color:#9f6715 }
+    .status .dot { width:6px;height:6px;border-radius:50%;background:currentColor }
+    .form-section { background:#eef5f0 }
+    .form-grid { display:grid;grid-template-columns:.75fr 1.25fr;gap:30px;align-items:start }
+    .form-panel { border:1px solid var(--line);background:white;border-radius:22px;padding:18px;box-shadow:var(--shadow) }
+    .form-panel iframe { width:100%;height:770px;border:0;background:#fff;border-radius:10px }
+    .details-list { display:grid;gap:14px;margin-top:25px }
+    .detail { display:flex;align-items:flex-start;gap:12px;font-size:14px;line-height:1.65;color:var(--muted) }
+    .check { display:grid;place-items:center; flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#d5eee0;color:#167854;font-weight:850;font-size:13px }
+    .note { background:#fff8e9;color:#745525;border:1px solid #f4e1b1;border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.62;margin-top:22px }
+    .mini-workflow { display:flex; gap:8px; flex-wrap:wrap;align-items:center;margin-top:23px }
+    .pill { background:white;border-radius:10px;padding:11px 14px;border:1px solid var(--line);font-size:13px;font-weight:700 }
+    .arrow { color:var(--teal) }
+    .bottom-cta { border-radius:23px;background:var(--navy);padding:42px;color:white;display:flex;justify-content:space-between;gap:30px;align-items:center }
+    .bottom-cta h2 { margin:4px 0 10px;font-size:33px }
+    .bottom-cta p { color:#aecfc9;max-width:580px;margin:0;line-height:1.7 }
+    footer { background:#082e34;color:#b6cec9;padding:23px 0;font-size:12px }
+    footer .shell { display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px }
+    .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0 }
+    @media(max-width:870px){ .hero-grid,.form-grid { grid-template-columns:1fr } .hero-grid { padding-top:58px;gap:6px }.hero-art{max-width:460px}.grid-three{grid-template-columns:1fr}.links{display:none}section{padding:55px 0}.bottom-cta{flex-direction:column;align-items:flex-start}.form-panel iframe{height:840px}}
+    @media(max-width:520px){ .shell{width:min(100% - 26px,1120px)}.nav{min-height:68px}.brand{font-size:17px}.brand-symbol{width:37px;height:37px}.desktop-cta{padding:10px 12px;font-size:12px}.hero-grid{padding-top:42px}.hero h1{font-size:45px}.hero p{font-size:14px}.form-panel{padding:7px}.form-panel iframe{height:800px}.bottom-cta{padding:28px}.bottom-cta h2{font-size:28px} }
+  </style>
+</head>
+<body>
+  <div class="topbar">TOURSINPAKISTAN • JUNIOR AI INTERN PRACTICAL ASSIGNMENT • DEMO ONLY</div>
+  <header><div class="shell nav">
+    <a class="brand" href="#home" aria-label="ToursInPakistan Demo home"><span class="brand-symbol"><svg viewBox="0 0 28 28" aria-hidden="true" fill="none"><path d="M3 23 11 6l5.2 9 3.5-6L26 23H3Z" stroke="#d5efe2" stroke-width="2.4" stroke-linejoin="round"/><path d="m8 13 3 3 2-3" stroke="#e4b263" stroke-width="2" stroke-linecap="round"/></svg></span> ToursInPakistan<span style="color:var(--teal)">.</span></a>
+    <nav class="links" aria-label="Page navigation"><a href="#overview">Workflow</a><a href="#form">Travel enquiry</a><a href="#roadmap">Next steps</a></nav>
+    <a class="btn btn-primary desktop-cta" href="#form">Try the form ↗</a>
+  </div></header>
+  <main>
+    <div class="hero" id="home"><div class="shell hero-grid">
+      <div>
+        <div class="eyebrow"><i></i> Travel lead automation • Test environment</div>
+        <h1>Every great trip starts with a <em>simple enquiry.</em></h1>
+        <p>A beginner-friendly demonstration that collects fictional travel enquiries through Google Forms and automatically organizes them in Google Sheets.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="#form">Submit a test enquiry →</a><a class="btn btn-ghost" href="#overview">Explore the workflow</a></div>
+        <div class="hero-note">✦ No real customer submissions. Demonstration only.</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <circle cx="341" cy="204" r="164" fill="#d8fae7" fill-opacity=".08"/>
+          <circle cx="347" cy="202" r="132" stroke="#c7f3df" stroke-opacity=".24" stroke-dasharray="7 8"/>
+          <path d="M25 421 177 208l92 116 99-161 190 258H25Z" fill="#277269"/>
+          <path d="m139 260 38-52 92 116 99-161 190 258H220Z" fill="#82aa89"/>
+          <path d="m304 267 64-104 56 77-27-14-29-30-23 39-41 32Z" fill="#e6f4de"/>
+          <path d="m130 270 47-62 42 52-27-12-15-21-20 25-27 18Z" fill="#f1f7de"/>
+          <path d="M23 420c70-52 172-44 239-6 92-54 179-58 298 7v33H23v-34Z" fill="#0a484c"/>
+          <path d="M41 442c104-40 215-29 287-2 93-40 165-31 233 4" stroke="#6ab99f" stroke-width="2" stroke-opacity=".65"/>
+          <circle cx="455" cy="119" r="43" fill="#e8bd6d"/>
+          <circle cx="455" cy="119" r="58" stroke="#f9dba0" stroke-opacity=".24"/>
+          <path d="M410 100q-20-22-35-13M422 84q-15-16-27-14" stroke="#c8edce" stroke-width="3" stroke-linecap="round"/>
+          <g transform="translate(54 37) rotate(-8 190 170)">
+            <rect x="57" y="24" width="237" height="310" rx="18" fill="#ecf7ed"/>
+            <rect x="73" y="41" width="205" height="276" rx="10" fill="#fff"/>
+            <rect x="91" y="62" width="110" height="12" rx="5" fill="#15595b"/>
+            <rect x="91" y="86" width="145" height="8" rx="4" fill="#d5e5dc"/>
+            <rect x="91" y="126" width="169" height="45" rx="9" fill="#f0f7f1"/>
+            <rect x="91" y="185" width="169" height="45" rx="9" fill="#f0f7f1"/>
+            <rect x="91" y="244" width="169" height="42" rx="9" fill="#087f77"/>
+            <path d="M119 266h108" stroke="#c9f5e0" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="111" cy="149" r="9" fill="#c7e5d2"/>
+            <rect x="127" y="143" width="92" height="9" rx="4" fill="#93b7aa"/>
+            <circle cx="111" cy="208" r="9" fill="#c7e5d2"/>
+            <rect x="127" y="203" width="107" height="9" rx="4" fill="#93b7aa"/>
+          </g>
+          <rect x="343" y="291" width="179" height="85" rx="16" fill="#fff"/>
+          <circle cx="375" cy="333" r="18" fill="#dbf4e5"/>
+          <path d="m367 333 6 6 11-13" stroke="#097e75" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="404" y="319" width="96" height="8" rx="4" fill="#24706f"/>
+          <rect x="404" y="338" width="70" height="7" rx="3.5" fill="#b6cac4"/>
+          <g fill="#f8d087"><circle cx="35" cy="112" r="3"/><circle cx="549" cy="230" r="3"/><circle cx="560" cy="86" r="3"/></g>
+        </svg>
+      </div>
+    </div></div>
+    <section id="overview"><div class="shell">
+      <div class="section-head"><div class="kicker">01 / Project overview</div><h2>One enquiry. An organized workflow.</h2><p class="sub">This demo shows what has been implemented and clearly separates the planned automation stages from the working ones.</p></div>
+      <div class="grid-three">
+        <div class="info-card"><div class="number">01</div><h3>Google Form</h3><p>Customers enter a destination, travel dates, number of travellers, contact details, and budget.</p><span class="status"><span class="dot"></span> Created & published</span></div>
+        <div class="info-card"><div class="number">02</div><h3>Google Sheets</h3><p>Each submitted form response is automatically recorded as a new row in the connected response spreadsheet.</p><span class="status"><span class="dot"></span> Connected & tested</span></div>
+        <div class="info-card"><div class="number">03</div><h3>Make.com + AI</h3><p>Planned next: notify sales by email, classify leads as Hot / Warm / Cold, and draft replies without inventing package details.</p><span class="status pending"><span class="dot"></span> Not integrated yet</span></div>
+      </div>
+    </div></section>
+    <section id="form" class="form-section"><div class="shell form-grid">
+      <div><div class="section-head"><div class="kicker">02 / Live form demo</div><h2>Try a test travel enquiry.</h2><p class="sub">The form below is the actual published Google Form from your assignment, connected to the existing Google Sheet.</p></div>
+        <div class="details-list"><div class="detail"><span class="check">✓</span><span>Use fictional customer names and fictional contact numbers only.</span></div><div class="detail"><span class="check">✓</span><span>Submit the form, then check that a new row appears in the private Google Sheet.</span></div><div class="detail"><span class="check">✓</span><span>Travel dates and number of travellers should be checked before submitting.</span></div></div>
+        <div class="note"><strong>Testing notice:</strong> This is a publicly accessible training form. Do not enter actual customers' personal information. The spreadsheet is intentionally not shared on this site.</div>
+        <div style="margin-top:22px"><a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSeSSkdZaNy2KIFq1J_q4Lp_UbjNsTLpKdUXbD48mNYm_BCO1A/viewform" target="_blank" rel="noopener noreferrer">Open form in new tab ↗</a></div>
+      </div>
+      <div class="form-panel"><iframe title="ToursInPakistan test travel enquiry form" src="https://docs.google.com/forms/d/e/1FAIpQLSeSSkdZaNy2KIFq1J_q4Lp_UbjNsTLpKdUXbD48mNYm_BCO1A/viewform?embedded=true" loading="lazy" referrerpolicy="strict-origin-when-cross-origin">Loading Google Form…</iframe></div>
+    </div></section>
+    <section id="roadmap"><div class="shell"><div class="section-head"><div class="kicker">03 / Roadmap</div><h2>What happens after submission?</h2><p class="sub">The working hand-off today is Google Form → Google Sheets. The rest will be built and demonstrated on Days 3–5.</p></div>
+      <div class="mini-workflow"><span class="pill">Travel enquiry form ✓</span><span class="arrow">→</span><span class="pill">Google Sheet ✓</span><span class="arrow">→</span><span class="pill">Make.com trigger (pending)</span><span class="arrow">→</span><span class="pill">Sales email (pending)</span><span class="arrow">→</span><span class="pill">AI classification (pending)</span></div>
+    </div></section>
+    <section style="padding-top:0"><div class="shell"><div class="bottom-cta"><div><div class="kicker" style="color:#93dcc2">ToursInPakistan • Demo project</div><h2>Ready for the next test?</h2><p>Submit another fictional enquiry to demonstrate the form-to-spreadsheet connection. Add Make.com email notifications and AI qualification in the next stages.</p></div><a class="btn btn-primary" href="#form">Go to enquiry form →</a></div></div></section>
+  </main>
+  <footer><div class="shell"><span>© 2026 ToursInPakistan • Training demonstration</span><span>Built for the Junior AI Intern assignment • No real customer data</span></div></footer>
+</body>
+</html>
